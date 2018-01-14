@@ -10,7 +10,7 @@ public class csvjdbc {
         String csvFile = "x.csv";
         String line = "";
         String cvsSplitBy = ",";
-        
+        String table_name = "csvToJDBC";
         int len;
         
         Connection con;
@@ -34,13 +34,32 @@ public class csvjdbc {
         		len = heading.length;
 //        		System.out.println(len);
         		
+        		String q = "create table " + table_name + "(";
+        		//"Host_Name varchar(50),IP_address varchar(40),OS varchar(40),Load_avg_1min varchar(40),Load_avg_5min varchar(40),Load_avg_15min varchar(40));";
+        		
+        		for(int i = 0; i< len ;i++) {
+                	q += heading[i] + " varchar(40)";
+                	if(i == len-1) 
+                	{
+                		break;
+                	}
+                	q+= ",";
+                }
+                
+                q+=")";
+        		
+                System.out.println("Query " + q);
+                Statement stm;
+                stm = con.createStatement();
+				
+				int rs = stm.executeUpdate(q);
         	
             while ((line = br.readLine()) != null) {
 
                 // use comma as separator
                 String[] country = line.split(cvsSplitBy);
                 
-                String query = "INSERT INTO emp ( Host_Name, IP_address, OS,Load_avg_1min, Load_avg_5min, Load_avg_15min) VALUES (";
+                String query = "INSERT INTO "+ table_name +" ( Host_Name, IP_address, OS,Load_avg_1min, Load_avg_5min, Load_avg_15min) VALUES (";
                 for(int i = 0; i< len ;i++) {
                 	query += "\"" + country[i] + "\"";
                 	if(i == len-1) 
@@ -57,7 +76,7 @@ public class csvjdbc {
 				try {
 					stmt = con.createStatement();
 				
-					int rs = stmt.executeUpdate(query);
+					int r = stmt.executeUpdate(query);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
