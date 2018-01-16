@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+function Calculate(i){
+	calculator.text.value += i;
+	calculator.text1.value = eval(calculator.text.value)
+}
+
+function CalculateFinal(){
+
+	calculator.text.value = calculator.text1.value;
+
+}
+
+function Backspace(){
+
+	
+	var s = calculator.text.value;
+	s = s.slice(0,-1);
+	calculator.text.value = s;
+	if(s == ""){
+		calculator.text.value = calculator.text1.value = "0";		
+	}
+	Calculate("");
+
+}
+
+</script>
+</head>
+<form name="calculator">
+<table border=4>
+<tr>
+<td>
+<input type="text" name="text" size="16">
+<br>
+</td>
+</tr>
+<tr>
+<td>
+<input type="text" name="text1" value="" size="16">
+<br>
+</td>
+</tr>
+<tr>
+<td>
+<input type="button" value="1" onclick="Calculate('1')">
+<input type="button" value="2" onclick="Calculate('2') ">
+<input type="button" value="3" onclick="Calculate('3')">
+<input type="button" value="+" onclick="Calculate('+')">
+<input type="button" value="BS" onclick="Backspace('')">
+<br>
+<input type="button" value="4" onclick="Calculate('4')">
+<input type="button" value="5" onclick="Calculate('5')">
+<input type="button" value="6" onclick="Calculate('6')">
+<input type="button" value="-" onclick="Calculate('-')">
+<!-- <input type="button" value=" " onclick=""> -->
+<br>
+<input type="button" value="7" onclick="Calculate('7')">
+<input type="button" value="8" onclick="Calculate('8')">
+<input type="button" value="9" onclick="Calculate('9')">
+<input type="button" value="*" onclick="Calculate('*')">
+<!-- <input type="button" value=" " onclick=""> -->
+<br>
+<input type="button" value="c" onclick="calculator.text.value = '';calculator.text1.value = ''">
+<input type="button" value="0" onclick="Calculate('0')">
+<input type="button" value="=" onclick="CalculateFinal()">
+<input type="button" value="/" onclick="Calculate('/')">
+<!-- <input type="button" value=" "  onclick=""> -->
+<br>
+</td>
+</tr>
+</table>
+</form>
+</html>
