@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Clock</title>
+  </head>
+  <body onload= "setT()">
+    <div id="content">
+            <form id="name_form">
+               <label id = "clock"> </label>
+              <input size="40" type="text" id="newTime" placeholder="dd/mm/yyyy hh:mm:ss" />
+              <button id="save">SAVE</button>
+              <button id="reset">RESET</button>
+            </form>
+    </div>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js">
+</script>
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+<script>
+
+function setT(){
+  var currentdate = new Date(); 
+var datetime = + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+
+// console.log(currentdate);
+
+$('#clock').html(datetime);
+
+}
+
+
+jQuery(function($)
+{
+	  var socket = io.connect();
+    /*var $nameForm = $('#name_form');
+    var $name = $('#name');
+    */
+  /*$nameForm.submit(function(e)
+	{
+       e.preventDefault();
+       socket.emit('sent', $name.val());
+       $name.val('');
+       
+
+
+	});
+  */
+    /*socket.on('receive', function(data){
+      
+  		var html = '<h1>Welcome ' + data + '</h1><br /><i>This message was generated using socket.io</i>';
+  		$('#content').html(html);
+    });
+*/
+    socket.on('update', function(data){
+      
+       // console.log(typeof data);
+        console.log(data);
+
+      var date = new Date(data);
+      // console.log(currentdate);
+      //var date = new Date(currentdate); 
+      // console.log(date);
+      
+      var datetime = + date.getDate() + "/"
+                + (date.getMonth()+1)  + "/" 
+                + date.getFullYear() + " @ "  
+                + date.getHours() + ":"  
+                + date.getMinutes() + ":" 
+                + date.getSeconds();
+
+
+
+      $('#clock').html(datetime);
+
+    });
+/*
+    $('#reset').on('click',function(){
+      
+
+      // var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+      
+      socket.emit('reset',$);        
+    })*/
+
+    $('#save').on('click',function(e){
+      
+      e.preventDefault();
+      // var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+      var s = $('#newTime').val();
+      /*console.log(s);
+       console.log(typeof s);*/
+
+
+      //dd/mm/yyyy hh:mm:ss
+      var day = s.substr(0,2);
+      var month = s.substr(3,2);
+      var year = s.substr(6,4);
+      var hours = s.substr(11,2);
+      var minutes = s.substr(14,2);
+      var seconds = s.substr(17,2);
+      var milliseconds = 0;
+      // console.log("hiiiiiiiiiiiiiiiiiiiiiii")
+
+      // console.log(year + " " + month+ " " + day+ " " + hours+ " " + minutes+ " " + seconds+ " " + milliseconds);
+      var d = new Date(year, parseInt(month) - 1, day, hours, minutes, seconds, milliseconds);
+      // broadcast(d);
+      socket.emit('save', d);        
+    });
+/*
+    function broadcast(data){
+      
+      var savedate = Date.parse(data);
+            // savedate  = new Date(currentdate);
+            //clearInterval(id); 
+            //id = 
+            setInterval(function(){
+                console.log("wooow")        
+                savedate += 1000;
+                var date  = new Date(savedate);
+                // console.log(date);
+                socket.emit('update', date);
+            }, 1000);
+
+
+
+    }*/
+
+
+    $('#reset').on('click',function(e){
+      
+      e.preventDefault();
+      // var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+      var s = $('#newTime').val();
+      /*console.log(s);
+       console.log(typeof s);*/
+
+
+      /*//dd/mm/yyyy hh:mm:ss
+      var day = s.substr(0,2);
+      var month = s.substr(3,2);
+      var year = s.substr(6,4);
+      var hours = s.substr(11,2);
+      var minutes = s.substr(14,2);
+      var seconds = s.substr(17,2);
+      var milliseconds = 0;
+      // console.log("hiiiiiiiiiiiiiiiiiiiiiii")
+
+      // console.log(year + " " + month+ " " + day+ " " + hours+ " " + minutes+ " " + seconds+ " " + milliseconds);
+      var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+*/
+      socket.emit('reset');        
+    });
+
+
+
+
+});
+            </script>
+  </body>
+</html> 

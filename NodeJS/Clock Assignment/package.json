@@ -1,0 +1,12 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Node.js first file",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.0.4",
+    "express": "4.14.0"
+  }
+}
