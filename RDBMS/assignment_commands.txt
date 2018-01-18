@@ -1,0 +1,93 @@
+CREATE DATABASE rest;
+USE rest;
+
+
+/*  Creation of Tables  */
+CREATE TABLE customer(ID INT NOT NULL AUTO_INCREMENT, F_name VARCHAR(20) NOT NULL DEFAULT '', L_name VARCHAR(20), phone_no CHAR(10), last_order_time DATETIME, address_line_1 VARCHAR(50), address_line_2 VARCHAR(50), city VARCHAR(20), zip INT, primary key(ID));
+
+CREATE TABLE bill (bill_id INT NOT NULL AUTO_INCREMENT, date DATE, cust_id INT, bill_amt INT, payment_mode VARCHAR(20), table_no INT, PRIMARY KEY (bill_id));
+
+CREATE TABLE menu (menu_id INT NOT NULL AUTO_INCREMENT,name VARCHAR(50), price INT, PRIMARY KEY (menu_id));
+
+CREATE TABLE orders (order_id INT NOT NULL AUTO_INCREMENT, bill_id INT, menu_id INT, qty INT, total_price INT, PRIMARY KEY (order_id));
+
+
+/*  Foriegn Key constrains   */
+
+ALTER TABLE bill ADD FOREIGN KEY (cust_id) REFERENCES customer(ID);
+ALTER TABLE orders ADD FOREIGN KEY (bill_id) REFERENCES bill(bill_id);
+ALTER TABLE orders ADD FOREIGN KEY (menu_id) REFERENCES menu(menu_id);
+
+
+/*  Data Insertion   */
+
+INSERT INTO customer ( F_name, L_name, phone_no,  last_order_time, address_line_1, address_line_2, city, zip) VALUES ('sidddharth','koti', '7259315656', now(), 'lane 1', 'road 2', 'Bangalore', 560087), ('Ashwin','kamat', '8799755557', now(), 'lane 3', 'road 2', 'Bangalore', 560099),('Ashwin','kamat', '9987229919', now(), '# 43 F', 'J P Nagar', 'Belgaum', 560001);
+
+INSERT INTO bill (date, cust_id, bill_amt, payment_mode, table_no ) VALUES ( CURDATE(), 1, 300, 'CASH', 1),(CURDATE(), 2, 1000, 'CARD', 3), ('2017-12-25', 1, 500, 'CASH', 1);
+
+INSERT INTO menu (name, price) VALUES ( 'Plain dosa', 35), ( 'masala dosa', 45), ( 'idli(2)', 25), ( 'idli-wada', 30);
+
+INSERT INTO orders (bill_id, menu_id, qty, total_price) VALUES ( 1,2,1,45 ), ( 1,2,2,70 ), ( 2,4,2,60 );
+
+
+
+/* 5th - Views  */
+
+CREATE VIEW vw_customerSnapshot as select c.F_name, c.L_name from customer c JOIN (select cust_id, count(cust_id) as cnt from bill GROUP BY cust_id ORDER BY cnt DESC LIMIT 1) c2 on (c.ID = c2.cust_id);
+
+CREATE VIEW vw_OrderSnapshot as select item.name, item.price from menu as item JOIN (select menu_id, count(menu_id) as cnt from orders GROUP BY menu_id ORDER BY cnt DESC LIMIT 1) c2 on (item.menu_id = c2.menu_id);
+
+/* 6th - Function */
+
+delimiter $$
+
+Create function fn_GetOrderTimeElapsed(CustomerID INT) 
+RETURNS TIME
+BEGIN 
+DECLARE diff INT;
+DECLARE a DATETIME;
+DECLARE b DATETIME;
+
+SET a = (select last_order_time from customer where ID = CustomerID);
+
+SET diff = TIMEDIFF(now(), a);
+
+RETURN diff;
+END $$
+
+delimiter ;
+
+
+
+/* 7th - Procedure */
+
+delimiter $$
+
+CREATE procedure sp_GetOrder(IN CustomerID INT)
+BEGIN
+SELECT * from orders where bill_id in (select bill_id from bill where cust_id = CustomerID);
+END $$
+
+delimiter ;
+
+
+/* 8th - Procedure */
+sp_GenerateBill(IN OrderID, OUT BillAMT)
+
+delimiter $$
+ 
+CREATE procedure sp_GenerateBill(IN OrderID INT, OUT BillAMT INT)
+
+BEGIN
+DECLARE tempvar INT;
+SELECT bill_amt into tempvar from bill where bill_id = orderID;
+
+SET BillAMT = tempvar;
+END $$
+
+delimiter ;
+
+//to test
+SET @bill_id = 1, @bill_amt = 0;
+call sp_GenerateBill(@bill_id ,@bill_amt );
+select @bill_amt as bill_amount; 
