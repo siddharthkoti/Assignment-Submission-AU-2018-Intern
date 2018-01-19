@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head >
+
+	<title>JS code quality</title>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+</head>
+<body>
+	
+	<label>GENDER: </label>
+	<label>Male</label>
+	<input type="radio" name="gender" value = "Male" required>
+	<label>FeMale</label>
+	<input type="radio" name="gender" value = "Female">
+	<label>Other</label>
+	<input type="radio" name="gender" value = "Other">
+	<br><br>	
+
+	<input type="checkbox" name="nameOrNumber" value = "Number only?" onchange="toggleCheckbox(this)"><label>Have Number only
+	</label> <br>
+
+	<div id="number" style="display: none">
+		<label>Input a number: </label>
+		<input id = "text" type = "number"  id="numInput" name="number"> 
+	</div>
+
+	<div id="nameAndAge">
+		<label>Enter Name: </label>
+		<input id = "name" type = "text" value=""><br>
+		<label>Enter Age: </label> 
+		<input id = "age" type = "number" value=""> <br>
+	</div>
+	
+	<button onclick="analyzeInput()" id = "analyze"> Submit</button>
+	<p id = "result">
+		
+	</p>
+
+	<div id="divTable" style="display: none;">
+		<table id= "table" border="1">
+			<tr><td>Gender</td><td>Name</td><td>Age</td></tr>
+		</table>
+
+	</div>
+
+	
+</body>
+
+<script type="text/javascript">
+		
+	document.getElementById("text").addEventListener("keyup", function(event) {
+	    event.preventDefault();
+	    if (event.keyCode === 13) {
+	        document.getElementById("analyze").click();
+	    }
+	});
+	</script>
+</html>

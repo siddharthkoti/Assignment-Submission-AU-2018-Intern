@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>JS code quality</title>
+	<script type="text/javascript" src="js/index.js"></script>
+
+	
+</head>
+<body>
+	<label>Input a name or a number</label><br>
+
+	<input id = "text" type = "text" value=""> 
+	<button onclick="evaluateInput()" id = "analyze"> Submit</button>
+	<p id = "result">
+		
+	</p>
+
+	
+</body>
+
+<script type="text/javascript">
+		
+	document.getElementById("text").addEventListener("keyup", function(event) {
+	    event.preventDefault();
+	    if (event.keyCode === 13) {
+	        document.getElementById("analyze").click();
+	    }
+	});
+	</script>
+</html>
